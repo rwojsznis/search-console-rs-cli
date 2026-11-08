@@ -28,6 +28,10 @@ url = "2.5.8"
 name = "gsc_cli"
 path = "src/lib.rs"
 
+[[bin]]
+name = "gsc-cli"
+path = "src/main.rs"
+
 # macOS's default `unpacked` leaves a .o per codegen unit that Cargo never deletes; `debug = 2` if a debugger needs more than line numbers.
 [profile.dev]
 debug = "line-tables-only"
