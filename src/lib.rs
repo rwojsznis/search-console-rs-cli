@@ -9,5 +9,9 @@
 // unit tests in `src/`.
 #![warn(clippy::unwrap_used, clippy::expect_used, clippy::panic)]
 
+pub mod api;
 pub mod cli;
+pub mod error;
+pub mod http;
 pub mod output;
+pub mod site;
