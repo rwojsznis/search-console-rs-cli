@@ -13,8 +13,12 @@ keywords = ["google", "search-console", "seo", "cli", "agents"]
 categories = ["command-line-utilities"]
 
 [dependencies]
+base64 = "0.23.1"
 clap = { version = "4.6.7", features = ["derive", "env"] }
 percent-encoding = "2.3.2"
+# Already in the tree through rustls (ureq's TLS). It signs the service
+# account JWT and hashes the PKCE verifier (decision 6).
+ring = "0.17.14"
 serde_json = { version = "1.0.154", features = ["preserve_order"] }
 ureq = "3.5.1"
 url = "2.5.8"
@@ -50,3 +54,4 @@ pedantic = { level = "warn", priority = -1 }
 
 [dev-dependencies]
 httptest = "0.16.4"
+tempfile = "3.27.0"

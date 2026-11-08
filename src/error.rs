@@ -262,7 +262,7 @@ fn api_hint(status: u16, reason: Option<&str>, message: &str) -> Option<String> 
         format!(
             "The token lacks the {} scope. Run `gsc-cli auth login`, or log in to gcloud \
              again with that scope in --scopes.",
-            "https://www.googleapis.com/auth/webmasters.readonly"
+            crate::auth::SCOPE
         )
     } else if message.contains("sufficient permission for site") {
         "Pass --site exactly as `gsc-cli sites list` prints it: sc-domain:example.com for a \
