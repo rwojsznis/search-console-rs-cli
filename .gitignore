@@ -6,5 +6,9 @@ Cargo.lock.orig
 .DS_Store
 lcov.info
 
-# Local mise overrides, e.g. credentials for trying the CLI. Never commit.
+# Local mise overrides: credentials and the property for trying the CLI on a
+# real account. Start from mise.local.toml.example. Never commit.
 mise.local.toml
+
+# OAuth client secrets as the Google Cloud console names its downloads.
+client_secret*.json

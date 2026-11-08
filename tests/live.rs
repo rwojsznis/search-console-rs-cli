@@ -2,13 +2,14 @@
 //! `#[ignore]`, CI never runs them, and each one skips when `GSC_LIVE_SITE`
 //! is not set.
 //!
-//! They use your own credentials, found the usual way (decision 6):
+//! They use your own credentials, found the usual way (decision 6). Set
+//! them, `GSC_LIVE_SITE` and, for the URL Inspection test, `GSC_LIVE_URL` (a
+//! page of that property) in `mise.local.toml` (from
+//! `mise.local.toml.example`), then:
 //!
 //! ```bash
-//! GSC_LIVE_SITE=sc-domain:example.com mise exec -- cargo test --test live -- --ignored
+//! mise exec -- cargo test --test live -- --ignored
 //! ```
-//!
-//! `GSC_LIVE_URL` (a page of that property) adds the URL Inspection test.
 //! They are safe on a production property: every command reads (decision 1),
 //! and the queries ask for a few rows.
 

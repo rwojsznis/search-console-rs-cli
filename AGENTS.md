@@ -58,6 +58,7 @@ generates it from the catalog.
 | `tests/catalog.rs` | Registry ↔ clap tree ↔ `ENDPOINTS`, every example as a `--dry-run`, help footers, `commands`, the `docs/commands.md` generator |
 | `tests/live.rs` | Opt-in smoke tests against the real API (`#[ignore]`; `GSC_LIVE_SITE`, optional `GSC_LIVE_URL`) |
 | `tests/fixtures/` | A throwaway RSA key for the JWT tests |
+| `mise.local.toml.example` | The template for `mise.local.toml` (ignored): credentials, `GSC_SITE`, the live test variables |
 
 Unit tests live in `#[cfg(test)] mod tests` next to the code; cross-cutting
 and CLI-level tests live in `tests/`.
@@ -119,6 +120,11 @@ mise manages Rust and every dev tool (decision 15).
 - Never install a dev tool with `cargo install` or Homebrew. If a tool is
   missing, add it to `mise.toml`, with a backend that downloads a prebuilt
   binary (`aqua:` or `github:`).
+- To try the CLI on a real account, copy `mise.local.toml.example` to
+  `mise.local.toml` (git ignores it) and uncomment what you use. The tests
+  remove those variables from the binary they spawn, so `mise run test`
+  never reaches Google; `mise exec -- cargo test --test live -- --ignored`
+  does.
 - CI installs the same pins with `jdx/mise-action`, and every CI step is a
   mise task. Renovate bumps `rust-toolchain.toml` and `rust-version`
   together, and the `mise.toml` tools through its `mise` manager.

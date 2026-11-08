@@ -1,0 +1,50 @@
+# Local settings for trying gsc-cli on a real Search Console account.
+#
+#   cp mise.local.toml.example mise.local.toml
+#
+# mise.local.toml is in .gitignore: never commit it. mise loads it on top of
+# mise.toml, so `mise exec -- …` and `mise run …` see these variables.
+#
+# Uncomment only what you set. An empty GSC_SITE or GSC_CREDENTIALS is a
+# usage error, not "unset". gsc-cli does not expand `~`; use {{env.HOME}}.
+# Keep key files outside the repository.
+#
+# The integration tests remove every GSC_* variable and point HOME at an empty
+# directory for the binary they spawn, so real credentials here cannot send a
+# request from `mise run test`. Only the opt-in live tests use them:
+#   mise exec -- cargo test --test live -- --ignored
+#
+# Try the CLI with:
+#   mise exec -- cargo run -q -- auth status
+#   mise exec -- cargo run -q -- sites list
+#   mise exec -- cargo run -q -- query -d page --limit 10 --format csv
+#   mise exec -- cargo run -q -- compare -d query --days 7 --sort clicksChange --order asc --limit 20
+
+[env]
+# ---- Credentials: set one (docs/design-notes.md, decision 6) ------------
+
+# A service account key. Add the service account's email as a user of the
+# property in Search Console (Settings, Users and permissions).
+# GSC_CREDENTIALS = "{{env.HOME}}/keys/gsc-reader.json"
+
+# Or log in as yourself, once, with a "Desktop app" OAuth client:
+#   mise exec -- cargo run -q -- auth login
+# It reads GSC_CLIENT_SECRET and writes ~/.config/gsc-cli/credentials.json,
+# which every later command finds without a variable.
+# GSC_CLIENT_SECRET = "{{env.HOME}}/keys/client_secret.json"
+
+# Or an access token you already have. It wins over everything above, and it
+# expires after about an hour.
+# GSC_ACCESS_TOKEN = "ya29.…"
+
+# ---- The property --------------------------------------------------------
+
+# The default --site, exactly as `sites list` prints it.
+# GSC_SITE = "sc-domain:example.com"
+
+# ---- The live tests (tests/live.rs) --------------------------------------
+
+# The property the live tests read.
+# GSC_LIVE_SITE = "sc-domain:example.com"
+# A page of that property, for the URL Inspection test.
+# GSC_LIVE_URL = "https://example.com/"
