@@ -1,0 +1,46 @@
+[package]
+name = "search-console-rs-cli"
+# Internal Cargo version. Release binaries get their version from the Git tag.
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.99.1"
+description = "Unofficial, read-only command-line client for the Google Search Console API, built for LLM agents"
+license = "MIT"
+repository = "https://github.com/rwojsznis/search-console-rs-cli"
+publish = false
+readme = "README.md"
+keywords = ["google", "search-console", "seo", "cli", "agents"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+clap = { version = "4.6.7", features = ["derive", "env"] }
+serde_json = { version = "1.0.154", features = ["preserve_order"] }
+
+[lib]
+name = "gsc_cli"
+path = "src/lib.rs"
+
+# macOS's default `unpacked` leaves a .o per codegen unit that Cargo never deletes; `debug = 2` if a debugger needs more than line numbers.
+[profile.dev]
+debug = "line-tables-only"
+split-debuginfo = "packed"
+
+[profile.dev.package."*"]
+debug = false
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = "symbols"
+
+# Kept in the manifest rather than in the CI command line, so a local `cargo
+# clippy` says the same thing CI does. The three panic-family restriction lints
+# live in `src/lib.rs` and `src/main.rs` instead, because they are about the
+# shipped code and the tests are full of `unwrap`.
+[lints.rust]
+unsafe_code = "forbid"
+missing_debug_implementations = "warn"
+unreachable_pub = "warn"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
