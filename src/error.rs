@@ -270,6 +270,12 @@ fn api_hint(status: u16, reason: Option<&str>, message: &str) -> Option<String> 
          property. A service account must be added as a user of the property in Search \
          Console."
             .to_owned()
+    } else if message.contains("not part of this property") {
+        "Inspect a URL inside --site: a URL-prefix property covers only the URLs that start \
+         with it, scheme and host included (https://example.com/ does not cover \
+         https://www.example.com/); a domain property covers every subdomain. Pass --site \
+         exactly as `gsc-cli sites list` prints it."
+            .to_owned()
     } else if message.contains("has not been used in project")
         || message.contains("it is disabled")
         || reason == Some("SERVICE_DISABLED")
@@ -420,6 +426,14 @@ mod tests {
                     "PERMISSION_DENIED",
                 ),
                 "sites list",
+            ),
+            (
+                google(
+                    403,
+                    "You do not own this site, or the inspected URL is not part of this property.",
+                    "PERMISSION_DENIED",
+                ),
+                "inside --site",
             ),
             (
                 google(

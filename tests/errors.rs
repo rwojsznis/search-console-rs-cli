@@ -4,7 +4,8 @@
 mod common;
 
 use common::{
-    Run, SENTINEL_TOKEN, SITE_PATH, assert_no_secret, base_url, expect_get, run, run_api,
+    Run, SENTINEL_TOKEN, SITE_PATH, assert_no_secret, base_url, expect_get, expect_post, run,
+    run_api,
 };
 use httptest::Server;
 use httptest::responders::{delay_and_then, status_code};
@@ -57,6 +58,33 @@ fn a_permission_error_has_the_status_reason_hint_and_request() {
         error["request"],
         json!({"method": "GET", "url": format!("{}{}", base_url(&server).trim_end_matches('/'), SITE_PATH)})
     );
+}
+
+#[test]
+fn an_inspected_url_outside_the_property_has_a_hint() {
+    let server = Server::run();
+    server.expect(
+        expect_post(
+            "/v1/urlInspection/index:inspect",
+            json!({"inspectionUrl": "https://other.example.com/a", "siteUrl": common::SITE}),
+        )
+        .respond_with(status_code(403).body(google_error(
+            403,
+            "You do not own this site, or the inspected URL is not part of this property.",
+            "PERMISSION_DENIED",
+        ))),
+    );
+
+    let out = run_api(
+        &server,
+        &["inspect", "-s", common::SITE, "https://other.example.com/a"],
+    );
+
+    let error = assert_error(&out, 1, "api");
+    assert_eq!(error["status"], 403);
+    let hint = error["hint"].as_str().unwrap_or_else(|| panic!("{error}"));
+    assert!(hint.contains("inside --site"), "{hint}");
+    assert!(hint.contains("sites list"), "{hint}");
 }
 
 #[test]
