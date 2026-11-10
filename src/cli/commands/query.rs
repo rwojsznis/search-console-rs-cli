@@ -138,14 +138,15 @@ pub(crate) fn resolve(
     Ok((start, end))
 }
 
-/// Google returns no rows, and no error, for days it no longer keeps.
+/// Google returns no rows, and no error, for days it no longer keeps. It
+/// keeps some days more than 16 months, so the rows "may be" missing.
 pub(crate) fn warn_before_retention(start: Date, today: Date) {
     let oldest = dates::months_before(today, dates::RETENTION_MONTHS);
     if start < oldest {
         warn(
             "before_retention",
             &format!(
-                "Search Console keeps 16 months of data: nothing before about {} comes back",
+                "Search Console keeps about 16 months of data: rows before about {} may be missing",
                 dates::format(oldest)
             ),
         );

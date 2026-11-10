@@ -223,6 +223,15 @@ fn a_start_before_the_16_months_warns() {
 
     assert_eq!(out.code, 0, "{out:?}");
     assert_eq!(out.warnings(), ["before_retention"]);
+    // Google keeps some days more than 16 months: the live API returned rows
+    // 12 days before the cutoff. So the warning must not say none come back.
+    let lines = out.stderr_lines();
+    let message = lines[0]["warning"]["message"].as_str().unwrap();
+    assert!(
+        message.starts_with("Search Console keeps about 16 months of data")
+            && message.ends_with("may be missing"),
+        "{message}"
+    );
 }
 
 #[test]

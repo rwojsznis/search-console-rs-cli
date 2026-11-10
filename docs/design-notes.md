@@ -229,7 +229,9 @@ nothing else.
   Search Console UI's "Last 28 days" works the same way.
 - Google keeps 16 months. A start before that is not an error (Google
   returns no rows for those days), but it gets a `before_retention`
-  warning.
+  warning. In practice Google keeps some days more (on one live property,
+  12 days), so the warning says rows "may be missing", not that none come
+  back.
 
 ### 10. Paging and row limits
 

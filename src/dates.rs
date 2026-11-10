@@ -7,7 +7,8 @@ use time::{Date, Duration, Month, OffsetDateTime};
 
 const FORMAT: &[BorrowedFormatItem<'_>] = format_description!("[year]-[month]-[day]");
 
-/// How long Search Console keeps performance data.
+/// How long Search Console keeps performance data, as Google documents it.
+/// In practice Google keeps some days more (decision 9).
 pub const RETENTION_MONTHS: i32 = 16;
 
 /// Parses `YYYY-MM-DD`, for clap.
