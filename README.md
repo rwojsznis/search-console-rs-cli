@@ -1,4 +1,5 @@
 # gsc-cli
+[![GitHub Release](https://img.shields.io/github/v/release/rwojsznis/search-console-rs-cli)](https://github.com/rwojsznis/search-console-rs-cli/releases/latest)
 [![CI](https://github.com/rwojsznis/search-console-rs-cli/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rwojsznis/search-console-rs-cli/actions/workflows/ci.yml?query=branch%3Amain)
 [![codecov](https://codecov.io/gh/rwojsznis/search-console-rs-cli/graph/badge.svg)](https://codecov.io/gh/rwojsznis/search-console-rs-cli)
 
