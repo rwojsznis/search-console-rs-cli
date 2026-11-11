@@ -8,7 +8,7 @@ idiomatic_version_file_enable_tools = ["rust"]
 "github:bnjbvr/cargo-machete" = "0.9.2"
 # rustsec tags each crate's releases with its own prefix, and attaches the
 # prebuilt cargo-audit binaries to the `cargo-audit/v*` ones.
-"github:rustsec/rustsec" = { version = "0.22.2", version_prefix = "cargo-audit/v", bin = "cargo-audit" }
+"github:rustsec/rustsec" = { version = "0.23.0", version_prefix = "cargo-audit/v", bin = "cargo-audit" }
 "aqua:rhysd/actionlint" = "1.7.12"
 
 # The single list of check commands. AGENTS.md and CI call these tasks and do
