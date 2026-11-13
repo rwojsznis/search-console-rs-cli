@@ -3,7 +3,7 @@ name = "search-console-rs-cli"
 # Internal Cargo version. Release binaries get their version from the Git tag.
 version = "0.0.0"
 edition = "2024"
-rust-version = "1.99.1"
+rust-version = "1.100"
 description = "Unofficial, read-only command-line client for the Google Search Console API, built for LLM agents"
 license = "MIT"
 repository = "https://github.com/rwojsznis/search-console-rs-cli"
