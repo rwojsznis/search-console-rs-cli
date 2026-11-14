@@ -263,3 +263,21 @@ impl Global {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn a_help_footer_for_an_unknown_path_changes_nothing() {
+        let mut cmd = Cli::command();
+        with_leaf_help(&mut cmd, &["sites", "nope"], "footer".into());
+        let sites = cmd.find_subcommand("sites").unwrap();
+        assert!(sites.get_after_help().is_none());
+        assert!(
+            sites
+                .get_subcommands()
+                .all(|sub| sub.get_after_help().is_none())
+        );
+    }
+}
