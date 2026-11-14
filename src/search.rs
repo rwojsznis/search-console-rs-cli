@@ -697,7 +697,7 @@ fn compare_values(a: &Value, b: &Value) -> Ordering {
 /// in either period, current rows first in Google's order.
 #[must_use]
 pub fn compare_rows(current: &[Value], previous: &[Value], dimensions: &[Dimension]) -> Vec<Value> {
-    let key = |row: &Value| row.get("keys").map(Value::to_string).unwrap_or_default();
+    let key = |row: &Value| row.get("keys").map_or_default(Value::to_string);
     let previous_by_key: HashMap<String, &Value> =
         previous.iter().map(|row| (key(row), row)).collect();
     let mut seen = std::collections::HashSet::new();
@@ -1100,6 +1100,11 @@ mod tests {
         );
         assert_eq!(
             named(&json!({"keys": []}), &[Dimension::Page]),
+            json!({"page": null})
+        );
+        // A row that is not an object has no metrics to copy.
+        assert_eq!(
+            named(&json!(null), &[Dimension::Page]),
             json!({"page": null})
         );
         assert_eq!(

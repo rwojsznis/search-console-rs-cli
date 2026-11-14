@@ -10,6 +10,8 @@ use common::{
 use httptest::Server;
 use httptest::responders::{delay_and_then, status_code};
 use serde_json::json;
+use std::io::{Read, Write};
+use std::net::TcpListener;
 use std::time::Duration;
 
 fn sites_get(server: &Server, extra: &[&str]) -> Run {
@@ -160,6 +162,39 @@ fn a_refused_connection_is_a_transport_error() {
     assert_eq!(
         error["request"]["url"],
         "http://127.0.0.1:1/webmasters/v3/sites"
+    );
+}
+
+#[test]
+fn a_body_cut_short_is_a_transport_error() {
+    // httptest always sends the whole body, so this server is a raw socket:
+    // it promises 100 bytes, sends one, and closes the connection.
+    let listener = TcpListener::bind("127.0.0.1:0").expect("a free port");
+    let port = listener.local_addr().expect("a bound port").port();
+    let server = std::thread::spawn(move || {
+        let (mut stream, _) = listener.accept().expect("one connection");
+        let mut request = Vec::new();
+        let mut byte = [0_u8];
+        while !request.ends_with(b"\r\n\r\n") {
+            stream.read_exact(&mut byte).expect("the request reads");
+            request.push(byte[0]);
+        }
+        stream
+            .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 100\r\n\r\n{")
+            .expect("the answer writes");
+    });
+    let base = format!("http://127.0.0.1:{port}/");
+
+    let out = run(
+        &["sites", "list", "--base-url", &base],
+        &[("GSC_ACCESS_TOKEN", SENTINEL_TOKEN)],
+    );
+
+    server.join().expect("the server thread ends");
+    let error = assert_error(&out, 3, "transport");
+    assert_eq!(
+        error["request"]["url"],
+        format!("{base}webmasters/v3/sites")
     );
 }
 
